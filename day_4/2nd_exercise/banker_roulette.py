@@ -5,7 +5,7 @@ import random
 
 names_string = input("Give me everybody's names, separated by a comma. ")
 names = names_string.split(", ")
-
+print(names)
 random_index = random.randrange(len(names))
 random_person = names[random_index]
 print(f'{random_person} is going to buy the meal today!')

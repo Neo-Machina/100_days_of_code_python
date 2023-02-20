@@ -26,7 +26,10 @@ def calculator():
 
     for symbol in operations:
         print(symbol)
-    while True:
+        
+    should_continue = True
+    
+    while should_continue:
         operation_symbol = input("Pick an operation: ")
         while True:
             try:
@@ -47,7 +50,7 @@ def calculator():
             num1 = answer
 
         elif keep_calculating == 'n':
-            False
+            should_continue = False
             calculator()
 
 calculator()
