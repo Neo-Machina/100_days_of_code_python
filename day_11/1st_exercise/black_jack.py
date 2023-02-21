@@ -1,127 +1,106 @@
-from art import logo
-# module random
 import random
+from art import logo
 import os
 clear = lambda: os.system('cls')
 
-while True:
-    play_game = input("Do you want to play a game of Blackjack? Type 'y' or 'n': ")
+def deal_card():
+  """Returns a random card from the deck."""
+  cards = [11, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10]
+  card = random.choice(cards)
+  return card
 
-    while play_game != 'y' and play_game != 'n':
-        play_game = input("Do you want to play a game of Blackjack? Type 'y' or 'n': ")
-    
-    if play_game == 'y':
-        clear()
-        # logo
-        print(logo)
-    
-        cards_game = [11, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10]
-    
-        my_cards = []
-        dealer_cards = []
-    
-        # add cards
-        def sum_cards(added_cards):
-            sum = 0
-            for card in added_cards:
-                sum += card
-            return sum
-        # add cards in my cards array or dealer_cards
-        def add_cards(cards, first_hand):
-            # my card
-            card = random.choice(cards_game)
-            # add my card to my_cards list
-            cards.append(card)
-            if first_hand:
-                card = random.choice(cards_game)
-                # add my card to my_cards list
-                cards.append(card)
-    
-            return cards
-        # ace value changed from 11 to 1
-        def soft_hand(cards_list, tot_cards):
-            if tot_cards(cards_list) > 21:
-                for card_num, card in enumerate(cards_list):
-                    if card == 11:
-                        cards_list[card_num] = 1
-                        break
-            
-        # show current score
-        def show_current_score(my_cards, sum_cards, dealer_cards):
-            current_score = print(
-                f'Your cards: {my_cards}, current score: {0 if (len(my_cards) == 2 and sum_cards(my_cards) == 21) else sum_cards(my_cards)}')
-           
-            dealer_first_score = print(f'Computer\'s first card: {dealer_cards[0]}')
-        # show final score 
-        def show_final_score(my_final_cards, final_cards_sum, final_dealer_cards):
-            final_score = print(f'Your final hand: {my_final_cards}, final score: {0 if (len(my_final_cards) == 2 and final_cards_sum(my_final_cards) == 21) else final_cards_sum(my_final_cards)}')
-            
-            dealer_final_score = print(f'Computer\'s final hand: {final_dealer_cards}, final score: {0 if (len(final_dealer_cards) == 2 and final_cards_sum(final_dealer_cards) == 21) else final_cards_sum(final_dealer_cards)}')
-        # win lose draw conditions
-        def win_lose_draw_conditions(sum, compare):
-            if sum(my_cards) > 21:
-                show_final_score(my_cards, sum_cards, dealer_cards)
-                print('You went over. You lose 😭')
-            if compare:
-                if sum(dealer_cards) > 21:
-                    print('Opponent went over. You win 😁')
-                elif (sum(my_cards) > sum(dealer_cards)) or (sum(my_cards) == 21 < sum(dealer_cards)):
-                    print('You win 😃')
-                elif sum(my_cards) < sum(dealer_cards): 
-                    print('You lose 😤')
-                else:
-                    print('Draw 🙃')
+# Create a function called calculate_score() that takes a List of cards as input 
+#and returns the score. 
+def calculate_score(cards):
+  """Take a list of cards and return the score calculated from the cards"""
 
-        # get cards
-        def get_cards():
-            add_cards(my_cards, True)
-            soft_hand(cards_list=my_cards, tot_cards=sum_cards) 
-            add_cards(dealer_cards, True)
-            soft_hand(cards_list=dealer_cards, tot_cards=sum_cards) 
-             
-            while sum_cards(dealer_cards) < 17:
-                add_cards(dealer_cards, False)
-                soft_hand(cards_list=dealer_cards, tot_cards=sum_cards)  
-            
-            show_current_score(my_cards, sum_cards, dealer_cards)
-            
-            while True:
-                if sum_cards(my_cards) == 21 and sum_cards(dealer_cards) == 21 and len(dealer_cards) == 2 and len(my_cards) == 2:
-                    show_final_score(my_final_cards=my_cards, final_cards_sum=sum_cards, final_dealer_cards=dealer_cards)
-                    print('Draw 🙃')
-                    break
-                elif sum_cards(my_cards) == 21 and len(my_cards) == 2:
-                    show_final_score(my_final_cards=my_cards, final_cards_sum=sum_cards, final_dealer_cards=dealer_cards)
-                    print('Win with a Blackjack 😎')
-                    break
-                elif sum_cards(dealer_cards) == 21 and len(dealer_cards) == 2:
-                    show_final_score(my_final_cards=my_cards, final_cards_sum=sum_cards, final_dealer_cards=dealer_cards)
-                    print('Lose, opponent has Blackjack 😱')
-                    break
-                elif sum_cards(my_cards) < 21:
-                    another_card = input('Type \'y\' to get another card, type \'n\' to pass: ')
-        
-                    while another_card != 'y' and another_card != 'n':
-                        another_card = input('Type \'y\' to get another card, type \'n\' to pass: ')
-        
-                    if another_card == 'y':
-                        add_cards(my_cards, False)
-                        soft_hand(cards_list=my_cards, tot_cards=sum_cards)
-                    
-                        show_current_score(my_cards, sum_cards, dealer_cards)
-                        
-                    else:
-                        show_final_score(my_final_cards=my_cards, final_cards_sum=sum_cards, final_dealer_cards=dealer_cards)
-                        win_lose_draw_conditions(sum=sum_cards, compare=True)
-                        break
-                elif sum_cards(my_cards) > 21:
-                    win_lose_draw_conditions(sum=sum_cards, compare=False)
-                    break
-                elif sum_cards(my_cards) == 21:
-                    show_final_score(my_cards, sum_cards, dealer_cards)
-                    win_lose_draw_conditions(sum=sum_cards, compare=True)
-                    break
-                    
-        get_cards()
+  # Inside calculate_score() check for a blackjack (a hand with only 2 cards: ace + 10) and return 0 instead of the actual score. 0 will represent a blackjack in our game.
+  if sum(cards) == 21 and len(cards) == 2:
+    return 0
+  # Inside calculate_score() check for an 11 (ace). If the score is already over 21, remove the 11 and replace it with a 1. You might need to look up append() and remove().
+  if 11 in cards and sum(cards) > 21:
+    for card_num, card in enumerate(cards):
+      if card == 11:
+          cards[card_num] = 1
+          break
+  return sum(cards)
+
+# Create a function called compare() and pass in the user_score and computer_score. If the computer and user both have the same score, then it's a draw. If the computer has a blackjack (0), then the user loses. If the user has a blackjack (0), then the user wins. If the user_score is over 21, then the user loses. If the computer_score is over 21, then the computer loses. If none of the above, then the player with the highest score wins.
+def compare(user_score, computer_score):
+  #Bug fix. If you and the computer are both over, you lose.
+  if user_score > 21 and computer_score > 21:
+    return "You went over. You lose 😤"
+
+  if user_score == computer_score:
+    return "Draw 🙃"
+  elif computer_score == 0:
+    return "Lose, opponent has Blackjack 😱"
+  elif user_score == 0:
+    return "Win with a Blackjack 😎"
+  elif user_score > 21:
+    return "You went over. You lose 😭"
+  elif computer_score > 21:
+    return "Opponent went over. You win 😁"
+  elif user_score > computer_score:
+    return "You win 😃"
+  else:
+    return "You lose 😤"
+
+def play_game():
+
+  print(logo)
+
+  # Deal the user and computer 2 cards each using deal_card()
+  user_cards = []
+  computer_cards = []
+  is_game_over = False
+
+  for _ in range(2):
+    user_cards.append(deal_card())
+    computer_cards.append(deal_card())
+
+  # The score will need to be rechecked with every new card drawn and the checks in Hint 9 need to be repeated until the game ends.
+
+  while not is_game_over:
+    # Call calculate_score(). If the computer or the user has a blackjack (0) or if the user's score is over 21, then the game ends.
+    user_score = calculate_score(user_cards)
+    computer_score = calculate_score(computer_cards)
+    print(f"Your cards: {user_cards}, current score: {user_score}")
+    print(f"Computer's first card: {computer_cards[0]}")
+
+    if user_score == 0 or computer_score == 0 or user_score > 21 or user_score == 21:
+      is_game_over = True
     else:
-        break
+      # If the game has not ended, ask the user if they want to draw another card. If yes, then use the deal_card() function to add another card to the user_cards List. If no, then the game has ended.
+      user_should_deal = input("Type 'y' to get another card, type 'n' to pass: ")
+      
+      while user_should_deal != 'y' and user_should_deal != 'n':
+        user_should_deal = input("Type 'y' to get another card, type 'n' to pass: ")
+                        
+      if user_should_deal == "y":
+        user_cards.append(deal_card())
+      else:
+        is_game_over = True
+
+  # Once the user is done, it's time to let the computer play. The computer should keep drawing cards as long as it has a score less than 17.
+  while computer_score != 0 and computer_score < 17:
+    computer_cards.append(deal_card())
+    computer_score = calculate_score(computer_cards)
+
+  print(f"Your final hand: {user_cards}, final score: {user_score}")
+  print(f"Computer's final hand: {computer_cards}, final score: {computer_score}")
+  print(compare(user_score, computer_score))
+
+# Ask the user if they want to restart the game. If they answer yes, clear the console and start a new game of blackjack and show the logo from art.py.
+while True:
+  asking_play_game = input("Do you want to play a game of Blackjack? Type 'y' or 'n': ")
+
+  while asking_play_game != 'y' and asking_play_game != 'n':
+          asking_play_game = input("Do you want to play a game of Blackjack? Type 'y' or 'n': ")
+
+  if asking_play_game == "y":
+    clear()
+    play_game()
+  else: 
+    break
+
